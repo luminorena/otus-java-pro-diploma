@@ -15,6 +15,7 @@
 ⚠️ Если updates-service-postgres или updates-service не поднимутся с первого раза, поднять их руками <br>
 * выполнить init.sql
 * запустить docker-compose -f docker-compose-kafka.yaml up -d
+⚠️ kafka-ui можно и не поднимать, только если нужно делать манипуляции с топиком и данными
 * в качестве SMTP-сервера используется [SMTP сервер](https://github.com/Nilhcem/FakeSMTP), необходимо запустить jar в консоли
 
 <h4> Создание индексов ElasticSearch вручную и дебаг </h4>
