@@ -1,0 +1,32 @@
+server:
+  port: 7777
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/updates
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    open-in-view: false
+  mail:
+    username: olya@test.ru
+    password: 123456
+    host: localhost
+    port: 25
+    properties:
+      smtp:
+        auth: true
+        strarttls:
+          enabled: false
+  application:
+    name: notifications
+
+updates:
+  kafka:
+    brokers: localhost:9091,localhost:9092,localhost:9093
+    topic: ms.updates.status.info
+    consumerGroup: updates-group
+
+logging:
+  config: classpath:environment/logback-spring.xml

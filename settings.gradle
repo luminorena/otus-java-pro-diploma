@@ -1,0 +1,4 @@
+rootProject.name = 'updates_service'
+include 'notifications'
+include 'updates'
+

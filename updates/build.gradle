@@ -1,0 +1,98 @@
+//noinspection GroovyAssignabilityCheck
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.2'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.adarshr.test-logger' version '3.2.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+testlogger {
+    showStandardStreams true
+    showFullStackTraces true
+    showCauses true
+    showExceptions true
+    showSummary true
+    showPassed true
+    showSkipped true
+    showFailed true
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    flywayVersion = "11.3.4"
+    postgresqlVersion = "42.7.2"
+    openApiVersion = "2.7.0"
+    lobmokVersion = "1.18.30"
+    jacksonJsrVersion = "2.18.3"
+    httpClientVersion = "5.4.1"
+    mapstructVersion = "1.6.3"
+    mapstructBindingVersion = "0.2.0"
+    kafkaSpringVersion = "3.3.3"
+    mockitoVersion = "4.0.0"
+    logstashVersion = "8.0"
+    logbackVersion = "1.5.17"
+    logbookVersion = "3.9.0"
+    junitVersion = "5.7.0"
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.micrometer:micrometer-core'
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+    implementation "org.flywaydb:flyway-database-postgresql:${flywayVersion}"
+    implementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    compileOnly "org.projectlombok:lombok:${lobmokVersion}"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation "org.springdoc:springdoc-openapi-starter-common:${openApiVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}"
+    implementation "org.apache.httpcomponents.client5:httpclient5:${httpClientVersion}"
+    implementation "org.zalando:logbook-spring-boot-starter:${logbookVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lobmokVersion}", "org.projectlombok:lombok-mapstruct-binding:${mapstructBindingVersion}"
+    implementation "org.springframework.kafka:spring-kafka:${kafkaSpringVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonJsrVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonJsrVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    testImplementation("org.mockito:mockito-core:${mockitoVersion}")
+    testImplementation("org.mockito:mockito-junit-jupiter:${mockitoVersion}")
+
+}
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+    maxParallelForks = 1
+    useJUnitPlatform()
+}
+
+
+
+
+
+

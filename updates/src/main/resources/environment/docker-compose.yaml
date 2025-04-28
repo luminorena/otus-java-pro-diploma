@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - updates-service
+    networks:
+      - elastic
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - elastic
+
+  updates-service-postgres:
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    image: postgres:latest
+    container_name: updates-service-postgres
+    ports:
+      - "5450:5432"
+    environment:
+      - POSTGRES_DB=updates
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-U", "postgres" ]
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01.sql
+    networks:
+      - elastic
+
+  updates-service:
+    build:
+      context: .
+      dockerfile: ms.Dockerfile
+    image: updates-service:latest
+    container_name: updates-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://updates-service-postgres:5432/updates
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    ports:
+      - "8181:8080"
+    depends_on:
+      - updates-service-postgres
+      - logstash
+    networks:
+      - elastic
+
+  elasticsearch:
+    image: elasticsearch:8.7.1
+    container_name: elasticsearch_springboot
+    ports:
+      - "9200:9200"
+    environment:
+      - bootstrap.memory_lock=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - xpack.security.http.ssl.enabled=false
+
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  kibana:
+    image: kibana:8.7.1
+    container_name: kibana_springboot
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+
+  logstash:
+    image: logstash:8.7.1
+    container_name: logstash
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+
+
+networks:
+  elastic:
+    driver: bridge
+
+volumes:
+  elasticsearch_data:
+    driver: local

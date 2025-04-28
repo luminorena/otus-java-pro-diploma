@@ -1,0 +1,60 @@
+package ru.otus.ms.core.updates.dtos.updates;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+import java.util.UUID;
+
+
+@Schema(description = "История обновлений")
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
+public class UpdatedHistoryDto {
+    @Schema(
+            description = "Идентификатор исторической записи обновления",
+            example = "69e95098-bd7d-4a05-b89c-f4b9c7fb151c",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            format = "String"
+    )
+    private UUID id;
+    @Schema(
+            description = "Идентификатор обновления",
+            example = "69e95098-bd7d-4a05-b89c-f4b9c7fb151c",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            format = "String"
+    )
+    private String originalUpdateId;
+    @Schema(
+            description = "Затрагивающая область",
+            example = "Driver",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            maxLength = 50
+    )
+    private String place;
+    @Schema(
+            description = "Описание обновления",
+            example = "Windows Subsystem for Linux Update 5.10.102.2",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            maxLength = 500
+    )
+    private String description;
+
+    @Schema(
+            description = "Время изменения обновления",
+            example = "2025-03-16 21:06:00.053483",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            format = "DateTime UTC"
+    )
+    private Instant changeAt;
+    @Schema(
+            description = "Тип изменения обновления",
+            example = "List.of('create', 'update', 'delete')",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            format = "ENUM"
+    )
+    private String changeType;
+}
