@@ -56,3 +56,7 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    mainClass = 'ru.otus.updates.NotificationsApplication'
+}

@@ -52,6 +52,12 @@ ext {
     junitVersion = "5.7.0"
 }
 
+
+bootJar {
+    mainClass = 'ru.otus.ms.core.updates.UpdatesApplication'
+}
+
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
