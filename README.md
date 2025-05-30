@@ -22,7 +22,7 @@
 
 <h4> Создание индексов ElasticSearch вручную и дебаг </h4>
 
-* перейти в дирректорию 
+* перейти в директорию 
 > /updates_service/updates/src/main/resources/environment
 * создать индекс вручную
 > docker exec -it elasticsearch_springboot curl -XPUT "http://localhost:9200/springboot-updates-service"
