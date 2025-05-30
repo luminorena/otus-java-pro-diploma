@@ -1,5 +1,7 @@
 <h2>Сервис уведомлений об обновлениях программного обеспечения в операционной системе </h2>
 
+Посмотреть работу проекта можно в видео описании [вот здесь](https://cloud.mail.ru/public/SeSY/Zi7D5CWwv)
+
 :white_check_mark:   Updates <br> REST сервис с CRUD операциями (пользователи и обновления в ОС), а также продьюсером в Kafka 
 обновлений в статусах CREATED, UPDATED, DELETED <br><br>
 :white_check_mark:   Notifications <br> Kafka сервис, консьюмер обновлений в статусах CREATED, UPDATED и 
